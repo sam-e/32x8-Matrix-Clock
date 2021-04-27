@@ -95,7 +95,6 @@ void setup() {
 
 void clearDigit(int index) {
   int xOffset;
-
   //--Get which digit to clear
   switch (index) {
     case 0: 
@@ -115,6 +114,33 @@ void clearDigit(int index) {
   for (int y = 0; y < 8; y++) {
     for (int x = 0; x < 6; x++) {
       matrix.drawPixel(x+xOffset, y, LOW);
+    }
+  }
+}
+
+void writeDigit(int index, int digit) {
+  int xOffset;
+  //--Get which digit to clear
+  switch (index) {
+    case 0: 
+      xOffset = OFFSET_M0;
+      break;
+    case 1: 
+      xOffset = OFFSET_M1;
+      break;
+    case 2: 
+      xOffset = OFFSET_H0;
+      break;
+    case 3: 
+      xOffset = OFFSET_H1;
+      break;    
+  }
+  //write first mins digit
+  for (int y = 0; y < 8; y++) {
+    for (int x = 0; x < 6; x++) {
+      if(skinnyFont[digit][y][x]) {
+        matrix.drawPixel(x+xOffset, y, HIGH);
+      }
     }
   }
 }
@@ -502,51 +528,21 @@ void setSkinnyFontTime() {
     lastDisplayedTime = timeString;
   }
   
-  //clear first mins digit
+  //--clear then write first mins digit
   clearDigit(0);  
-  //write first mins digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(skinnyFont[m0][y][x]) {
-        matrix.drawPixel(x+OFFSET_M0, y, HIGH);
-      }
-    }
-  }
+  writeDigit(0, m0);
 
-  //clear second min digit
+  //--clear then write clear second min digit
   clearDigit(1);  
-  //write second mins digit
-   for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(skinnyFont[m1][y][x]) {
-        matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-      }
-    }
-  }
+  writeDigit(1, m1);
 
-  //clear first hr digit
+  //--clear then write hr digit
   clearDigit(2);
-  //write first hr digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if (h1 != 0) {
-        if(skinnyFont[h1][y][x]) {
-          matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-        }
-      }
-    }
-  }
+  writeDigit(2, h0);
 
-  //clear 2nd hr digit
+  //--clear then write 2nd hr digit
   clearDigit(3);
-  //write 2nd hr digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(skinnyFont[h0][y][x]) {
-        matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-      }
-    }
-  }
+  writeDigit(3, h1);
 }
 
 void skinnydotdots() {
@@ -570,6 +566,7 @@ void skinnydotdots() {
     }
   }
 }
+
 
 void loop() {
   //setFatFontTime();
