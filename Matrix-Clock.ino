@@ -33,10 +33,7 @@ const int OFFSET_M1 = 19;
 const int OFFSET_H0 = 9;
 const int OFFSET_H1 = 2;
 
-bool transitionFlag1 = false;
-bool transitionFlag2 = false;
-bool transitionFlag3 = false;
-bool transitionFlag4 = false;
+bool transitionFlag = false;
 bool isDots = true; 
 
 
@@ -238,265 +235,84 @@ void dotdots() {
   }
 }
 
-void transitionOne() {
+void transition(int index, int digit) {
+    int xOffset;
+    //--Get which digit to clear
+    switch (index) {
+    case 0: 
+      xOffset = OFFSET_M0;
+      break;
+    case 1: 
+      xOffset = OFFSET_M1;
+      break;
+    case 2: 
+      xOffset = OFFSET_H0;
+      break;
+    case 3: 
+      xOffset = OFFSET_H1;
+      break;    
+    }
+  
   for (int t = 0; t < 4; t++) {
     Serial.println("animating1");
     //Serial.println(m0);
 
     for (int y = 0; y < 8; y++) {
       for (int x = 0; x < 6; x++) {
-        switch (m0){
+        switch (digit){
           case 0: 
             if(trans01[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 1: 
             if(trans02[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 2: 
             if(trans03[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 3: 
             if(trans04[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 4: 
             if(trans05[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 5: 
             if(trans06[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
            case 6: 
             if(trans07[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 7: 
             if(trans08[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
             break;
           case 8: 
             if(trans09[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             }
           case 9: 
             if(trans10[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M0, y, HIGH);
+              matrix.drawPixel(x+xOffset, y, HIGH);
             } 
             break;                 
         }
       }
     }
-    if (t==3) { transitionFlag1 = false; }
-    matrix.write(); 
-    if (t<3) { delay(150); }
-  }
-}
-
-void transitionTwo() {
-  for (int t = 0; t < 4; t++) {
-    Serial.println("animating2");
-    //Serial.println(m0);
-
-    for (int y = 0; y < 8; y++) {
-      for (int x = 0; x < 6; x++) {
-        switch (m1){
-          case 0: 
-            if(trans01[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 1: 
-            if(trans02[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 2: 
-            if(trans03[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 3: 
-            if(trans04[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 4: 
-            if(trans05[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 5: 
-            if(trans06[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-           case 6: 
-            if(trans07[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 7: 
-            if(trans08[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-            break;
-          case 8: 
-            if(trans09[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            }
-          case 9: 
-            if(trans10[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-            } 
-            break;                 
-        }
-      }
-    }
-    if (t==3) { transitionFlag2 = false; }
-    matrix.write(); 
-    if (t<3) { delay(150); }
-  }
-}
-
-void transitionThree() {
-  for (int t = 0; t < 4; t++) {
-    Serial.println("animating3");
-    //Serial.println(m0);
-
-    for (int y = 0; y < 8; y++) {
-      for (int x = 0; x < 6; x++) {
-        switch (h0){
-          case 0: 
-            if(trans01[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 1: 
-            if(trans02[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 2: 
-            if(trans03[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 3: 
-            if(trans04[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 4: 
-            if(trans05[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 5: 
-            if(trans06[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-           case 6: 
-            if(trans07[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 7: 
-            if(trans08[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-            break;
-          case 8: 
-            if(trans09[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            }
-          case 9: 
-            if(trans10[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-            } 
-            break;                 
-        }
-      }
-    }
-    if (t==3) { transitionFlag3 = false; }
-    matrix.write(); 
-    if (t<3) { delay(150); }
-  }
-}
-
-void transitionFour() {
-  for (int t = 0; t < 4; t++) {
-    Serial.println("animating4");
-    //Serial.println(m0);
-
-    for (int y = 0; y < 8; y++) {
-      for (int x = 0; x < 6; x++) {
-        switch (h1){
-          case 0: 
-            if(trans01[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 1: 
-            if(trans02[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 2: 
-            if(trans03[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 3: 
-            if(trans04[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 4: 
-            if(trans05[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 5: 
-            if(trans06[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-           case 6: 
-            if(trans07[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 7: 
-            if(trans08[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-            break;
-          case 8: 
-            if(trans09[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            }
-          case 9: 
-            if(trans10[t][y][x]) {
-              matrix.drawPixel(x+OFFSET_H1, y, HIGH);
-            } 
-            break;                 
-        }
-      }
-    }
-    if (t==3) { transitionFlag4 = false; }
+    if (t==3) { transitionFlag = false; }
     matrix.write(); 
     if (t<3) { delay(150); }
   }
@@ -575,10 +391,10 @@ void loop() {
 
   //Serial.println(s);
   //--set the animation transition flag before the time changes
-  if (secs==59 && millisecs==999) { transitionFlag1=true; transitionOne(); Serial.println("f1"); }
-  if (m0==9 && secs==59 && millisecs==999) { transitionFlag2=true; transitionTwo(); Serial.println("f2"); }
-  if (myMinutes==59 && secs==59 && millisecs==999) { transitionFlag3=true; transitionThree(); Serial.println("f3"); }
-  if (h0==9 && myMinutes==59 && secs==59 && millisecs==999) { transitionFlag4=true; transitionFour(); Serial.println("f4"); }
+  if (secs==59 && millisecs==999) { transitionFlag=true; transition(0, m0); Serial.println("f1"); }
+  if (m0==9 && secs==59 && millisecs==999) { transitionFlag=true; transition(1, m1); Serial.println("f2"); }
+  if (myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(2, h0); Serial.println("f3"); }
+  if (h0==9 && myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(3, h1); Serial.println("f4"); }
   
   unsigned long currentMillis = millis();
   
