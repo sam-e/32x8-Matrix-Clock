@@ -36,6 +36,7 @@ const int OFFSET_H1 = 2;
 bool transitionFlag = false;
 bool isDots = true; 
 
+bool fattyFont = false;
 
 int m0 = 0;
 int m1 = 0;
@@ -135,190 +136,78 @@ void writeDigit(int index, int digit) {
   //write first mins digit
   for (int y = 0; y < 8; y++) {
     for (int x = 0; x < 6; x++) {
-      if(skinnyFont[digit][y][x]) {
-        matrix.drawPixel(x+xOffset, y, HIGH);
-      }
-    }
-  }
-}
-
-void setFatFontTime() {
-  String timeString = "";
-  String AmPmString = "";
-  bool PM = isPM();
-  timeString = myTZ.dateTime("hi");
-  int m0 = charToInt(timeString[3]);
-  int m1 = charToInt(timeString[2]);
-  int h0 = charToInt(timeString[1]);
-  int h1 = charToInt(timeString[0]);
-
-  if (h0 == 6 && myTZ.isAM()) { matrix.setIntensity(5); }
-  if (h0 == 8 && myTZ.isPM()) { matrix.setIntensity(0); }  
- 
-  // Only update Time if its different
-  if (lastDisplayedTime != timeString) {
-    Serial.println(m0);
-    Serial.println(m1);
-    Serial.println(h0);
-    Serial.println(h1);
-        
-    lastDisplayedTime = timeString;
-  }
-
-  //clear first mins digit
-  clearDigit(0);
-  
-  //write first mins digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(fatFont[m0][y][x]) {
-        matrix.drawPixel(x+OFFSET_M0, y, HIGH);
-      }
-    }
-  }
-
-  //clear second min digit
-  clearDigit(1);
-  //write second mins digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(fatFont[m1][y][x]) {
-        matrix.drawPixel(x+OFFSET_M1, y, HIGH);
-      }
-    }
-  }
-
-  //clear first hr digit
-  clearDigit(2);
-  //write first hr digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if (h1 != 0) {
-        if(fatFont[h1][y][x]) {
-          matrix.drawPixel(x+OFFSET_H1, y, HIGH);
+      if (fattyFont) {
+        if(fatFont[digit][y][x]) {
+          matrix.drawPixel(x+xOffset, y, HIGH);
         }
       }
-    }
-  }
-
-  //clear 2nd hr digit
-  clearDigit(3);
-  //write 2nd hr digit
-  for (int y = 0; y < 8; y++) {
-    for (int x = 0; x < 6; x++) {
-      if(fatFont[h0][y][x]) {
-        matrix.drawPixel(x+OFFSET_H0, y, HIGH);
-      }
-    }
-  }
-}
-
-void dotdots() {
-  //clear dot dots
-  if (!isDots) {  
-    for (int y = 0; y < 8; y++) {
-      for (int x = 0; x < 2; x++) {      
-        matrix.drawPixel(x+16, y, LOW);
-      }
-    }
-  }
-
-  if (isDots) {
-    //--dots
-    for (int y = 0; y < 8; y++) {
-      for (int x = 0; x < 2; x++) {      
-        if(dots[y][x]) { 
-          matrix.drawPixel(x+16, y, HIGH);
+      else {
+        if(skinnyFont[digit][y][x]) {
+          matrix.drawPixel(x+xOffset, y, HIGH);     
         }
       }
     }
   }
 }
+
 
 void transition(int index, int digit) {
-    int xOffset;
-    //--Get which digit to clear
-    switch (index) {
-    case 0: 
-      xOffset = OFFSET_M0;
-      break;
-    case 1: 
-      xOffset = OFFSET_M1;
-      break;
-    case 2: 
-      xOffset = OFFSET_H0;
-      break;
-    case 3: 
-      xOffset = OFFSET_H1;
-      break;    
-    }
+  int offScreen = -8;
+  int xOffset;
+  int nextDig = 0;
+  //--Get which digit to clear
+  switch (index) {
+  case 0: 
+    xOffset = OFFSET_M0;
+    if (digit == 9) { nextDig = 0; }
+    else nextDig = digit + 1;
+    break;
+  case 1: 
+    xOffset = OFFSET_M1;
+    if (digit == 5) { nextDig = 0; }
+    else nextDig = digit + 1;   
+    break;
+  case 2: 
+    xOffset = OFFSET_H0;
+    if (digit == 5) { nextDig = 0; }
+    else nextDig = digit + 1;   
+    break;
+  case 3: 
+    xOffset = OFFSET_H1;
+    if (digit == 2) { nextDig = 0; }
+    else nextDig = digit + 1;   
+    break;    
+  }
   
-  for (int t = 0; t < 4; t++) {
-    Serial.println("animating1");
-    //Serial.println(m0);
+  for (int i=0; i < 16; i++) {
+    //--Clear the screen for the next write
+    clearDigit(index);
 
+    //--Start displaying the digit offscreen
+    //--Increment by one until the last write
+    //--This will sample falling numbers
+    if (offScreen<0) { offScreen++; }
     for (int y = 0; y < 8; y++) {
       for (int x = 0; x < 6; x++) {
-        switch (digit){
-          case 0: 
-            if(trans01[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 1: 
-            if(trans02[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 2: 
-            if(trans03[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 3: 
-            if(trans04[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 4: 
-            if(trans05[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 5: 
-            if(trans06[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-           case 6: 
-            if(trans07[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 7: 
-            if(trans08[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-            break;
-          case 8: 
-            if(trans09[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            }
-          case 9: 
-            if(trans10[t][y][x]) {
-              matrix.drawPixel(x+xOffset, y, HIGH);
-            } 
-            break;                 
+        if(fattyFont) {
+          if(fatFont[nextDig][y][x]) {
+            matrix.drawPixel(x+xOffset, y+offScreen, HIGH);
+          }
+        }
+        else {
+          if(skinnyFont[nextDig][y][x]) {
+            matrix.drawPixel(x+xOffset, y+offScreen, HIGH);
+          }  
         }
       }
     }
-    if (t==3) { transitionFlag = false; }
-    matrix.write(); 
-    if (t<3) { delay(150); }
+    delay(30);
+    matrix.write();
   }
 }
 
-void setSkinnyFontTime() {
+
+void updateTime() {
   String timeString = "";
   String AmPmString = "";
   bool PM = isPM();
@@ -334,7 +223,7 @@ void setSkinnyFontTime() {
   if (h0 == 6 && myTZ.isAM()) { matrix.setIntensity(5); }
   if (h0 == 8 && myTZ.isPM()) { matrix.setIntensity(0); }  
    
-  // Only update Time if its different
+  /*// Only update Time if its different
   if (lastDisplayedTime != timeString) {
     //Serial.println(m0);
     //Serial.println(m1);
@@ -342,7 +231,7 @@ void setSkinnyFontTime() {
     //ial.println(myMinutes);
        
     lastDisplayedTime = timeString;
-  }
+  }*/
   
   //--clear then write first mins digit
   clearDigit(0);  
@@ -384,17 +273,43 @@ void skinnydotdots() {
 }
 
 
-void loop() {
-  //setFatFontTime();
-  setSkinnyFontTime(); 
-  skinnydotdots();
+void dotdots() {
+  //clear dot dots
+  if (!isDots) {  
+    for (int y = 0; y < 8; y++) {
+      for (int x = 0; x < 2; x++) {      
+        matrix.drawPixel(x+16, y, LOW);
+      }
+    }
+  }
 
+  if (isDots) {
+    //--dots
+    for (int y = 0; y < 8; y++) {
+      for (int x = 0; x < 2; x++) {      
+        if(dots[y][x]) { 
+          matrix.drawPixel(x+16, y, HIGH);
+        }
+      }
+    }
+  }
+}
+
+
+void loop() {
+  //--update the time 
+  //--check and use the correct fontdots
+  updateTime(); 
+
+  if (fattyFont) { dotdots(); }
+  else skinnydotdots();
+  
   //Serial.println(s);
   //--set the animation transition flag before the time changes
-  if (secs==59 && millisecs==999) { transitionFlag=true; transition(0, m0); Serial.println("f1"); }
-  if (m0==9 && secs==59 && millisecs==999) { transitionFlag=true; transition(1, m1); Serial.println("f2"); }
-  if (myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(2, h0); Serial.println("f3"); }
-  if (h0==9 && myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(3, h1); Serial.println("f4"); }
+  if (secs==59 && millisecs==999) { transitionFlag=true; transition(0, m0); }
+  if (m0==9 && secs==59 && millisecs==999) { transitionFlag=true; transition(1, m1); }
+  if (myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(2, h0); }
+  if (h0==9 && myMinutes==59 && secs==59 && millisecs==999) { transitionFlag=true; transition(3, h1); }
   
   unsigned long currentMillis = millis();
   
