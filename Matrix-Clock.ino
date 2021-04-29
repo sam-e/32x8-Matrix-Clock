@@ -169,7 +169,7 @@ void transition(int index, int digit) {
     break;
   case 2: 
     xOffset = OFFSET_H0;
-    if (digit == 5) { nextDig = 0; }
+    if (digit == 9) { nextDig = 0; }
     else nextDig = digit + 1;   
     break;
   case 3: 
